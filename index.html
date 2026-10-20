@@ -3,33 +3,371 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang Chủ - Quản Lý</title>
+    <title>Nông Sản Xanh - Cửa Hàng Hoa Quả Tươi Cao Cấp & Hộp Quà Biếu</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Danh Sách Quản Lý</h1>
-        <nav>
-            <a href="index.html">Trang Chủ</a>
-            <a href="add.html">Thêm Mới</a>
-        </nav>
-        
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Tên Mục</th>
-                    <th>Thao Tác</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Dữ liệu mẫu 01</td>
-                    <td><a href="detail.html" style="padding: 4px 10px; font-size: 14px;">Xem chi tiết</a></td>
-                </tr>
-            </tbody>
-        </table>
+
+    <!-- 1. TOPBAR TIỆN ÍCH -->
+    <div class="topbar">
+        <div class="topbar-container">
+            <div class="topbar-msg">
+                <span>🚚 <strong>Freeship</strong> đơn hàng từ 250.000đ</span>
+                <span>🛡️ Cam kết đổi trả 1-1 trong 24h nếu dập nát</span>
+                <span>📞 Hotline hỗ trợ: <strong>1900 xxxx</strong></span>
+            </div>
+            <div class="topbar-links">
+                <a href="gio-hang.html" style="font-weight: 600;">🛒 Giỏ hàng & Thanh toán</a>
+                <a href="javascript:void(0)" onclick="openOrderTrackingModal()">🔍 Tra cứu đơn hàng</a>
+                <a href="quan-ly.html">Kênh Quản trị Kho (Admin)</a>
+                <a href="#aboutSection">Về chúng tôi</a>
+            </div>
+        </div>
     </div>
+
+    <!-- 2. HEADER CHÍNH -->
+    <header>
+        <div class="header-main">
+            <!-- Logo Thương Hiệu -->
+            <a href="index.html" class="brand">
+                <div class="brand-icon">🌿</div>
+                <div class="brand-info">
+                    <span class="brand-name">Cửa Hàng Hoa Quả</span>
+                    <span class="brand-tagline">Trái cây tươi loại 1 & Hộp quà biếu</span>
+                </div>
+            </a>
+
+            <!-- Thanh tìm kiếm thông minh -->
+            <div class="header-search">
+                <form class="search-form" onsubmit="event.preventDefault();">
+                    <span class="search-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </span>
+                    <input type="text" id="searchInput" class="search-input" placeholder="Tìm táo đỏ, nho mẫu đơn, bơ sáp 034, dâu tây...">
+                    <button type="button" id="searchClearBtn" class="search-clear" onclick="clearSearch()">&times;</button>
+                </form>
+            </div>
+
+            <!-- Khối Hotline & Giỏ hàng -->
+            <div class="header-actions">
+                <div class="hotline-box">
+                    <div class="hotline-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    </div>
+                    <div>
+                        <div class="hotline-label">Tư vấn trực tuyến</div>
+                        <div class="hotline-num">1900 xxxx</div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-quickview" onclick="openOrderTrackingModal()" style="display: flex; align-items: center; gap: 6px; padding: 8px 12px; font-size: 13px;">
+                    <span>🔍 Tra cứu đơn</span>
+                </button>
+
+                <!-- Nút mở giỏ hàng trượt Drawer -->
+                <button type="button" id="headerCartBtn" class="cart-header-btn" onclick="openCartDrawer()" title="Xem nhanh giỏ hàng & thanh toán">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                    <span>Giỏ hàng</span>
+                    <span id="cartBadge" class="cart-badge-pill">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 3. SUBNAV / CATEGORY BAR -->
+    <nav class="subnav">
+        <div class="subnav-container">
+            <ul class="category-nav">
+                <li><button class="cat-item-btn active" data-category="all">Tất cả sản phẩm</button></li>
+                <li><button class="cat-item-btn" data-category="noi-dia">Trái cây Việt Nam</button></li>
+                <li><button class="cat-item-btn" data-category="nhap-khau">Trái cây nhập khẩu</button></li>
+                <li><button class="cat-item-btn" data-category="gio-qua">Giỏ quà biếu & Set quà</button></li>
+            </ul>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <a href="gio-hang.html" class="nav-admin-link" style="color: var(--primary); font-weight: 600;">🛒 Xem giỏ hàng & thanh toán</a>
+                <a href="quan-ly.html" class="nav-admin-link">⚙️ Bảng Quản Trị Kho (FEFO)</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 4. HERO SECTION CHUYÊN NGHIỆP -->
+    <section class="hero-showcase">
+        <div class="hero-layout">
+            <!-- Banner chính bên trái -->
+            <div class="hero-main-card">
+                <span class="hero-badge">🌟 Mùa Vụ Thu Hoạch Nông Sản 2026</span>
+                <h1 class="hero-title">Trái Cây Tươi Ngon Chọn Lọc Chuẩn VietGAP & GlobalGAP</h1>
+                <p class="hero-desc">Thu hái trực tiếp từ các nhà vườn đạt chuẩn chất lượng và nhập khẩu chính ngạch tiêu chuẩn cao. Đảm bảo độ ngọt tự nhiên, an toàn cho cả gia đình.</p>
+                <a href="#productSection" class="hero-cta">Xem danh sách hoa quả ngay</a>
+            </div>
+
+            <!-- Khối thẻ ưu đãi bên phải -->
+            <div class="hero-side-cards">
+                <div class="side-promo-card">
+                    <div>
+                        <div class="side-promo-tag">🎁 Ưu đãi đặc biệt</div>
+                        <h3 class="side-promo-title">Giảm 10% Cho Đơn Từ 200k</h3>
+                        <p class="side-promo-desc">Nhập mã ưu đãi khi thanh toán giỏ hàng</p>
+                    </div>
+                    <span class="code-pill" onclick="copyVoucher('TRAICAY10')">Mã: TRAICAY10 (Chạm để sao chép)</span>
+                </div>
+
+                <div class="side-promo-card">
+                    <div>
+                        <div class="side-promo-tag">🚀 Dịch vụ hỏa tốc</div>
+                        <h3 class="side-promo-title">Giao Nhanh 2 Giờ Nội Thành</h3>
+                        <p class="side-promo-desc">Đóng gói kèm đá gel giữ lạnh, hoa quả luôn tươi nguyên vị khi đến tay bạn.</p>
+                    </div>
+                    <span class="code-pill" onclick="copyVoucher('FREESHIP')">Mã: FREESHIP</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. SERVICE TRUST BAR (Cam kết dịch vụ) -->
+    <section class="trust-bar">
+        <div class="trust-inner">
+            <div class="trust-item">
+                <div class="trust-icon">🚚</div>
+                <div>
+                    <h4>Giao hàng nhanh 2H</h4>
+                    <p>Đóng đá gel giữ lạnh tươi ngon</p>
+                </div>
+            </div>
+            <div class="trust-item">
+                <div class="trust-icon">🛡️</div>
+                <div>
+                    <h4>Bao ăn đổi trả 24H</h4>
+                    <p>1 đổi 1 miễn phí nếu quả bị dập hỏng</p>
+                </div>
+            </div>
+            <div class="trust-item">
+                <div class="trust-icon">🏷️</div>
+                <div>
+                    <h4>Nguồn gốc minh bạch</h4>
+                    <p>Tem kiểm định VietGAP & mã QR</p>
+                </div>
+            </div>
+            <div class="trust-item">
+                <div class="trust-icon">🎁</div>
+                <div>
+                    <h4>Miễn phí thiệp & ruy băng</h4>
+                    <p>Viết tay lời chúc cho set giỏ quà</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. VÙNG DANH SÁCH HOA QUẢ CHÍNH -->
+    <main class="main-container" id="productSection">
+        <!-- Thanh công cụ lọc & sắp xếp -->
+        <div class="filter-toolbar">
+            <div class="filter-left">
+                <span class="filter-label">Mức giá:</span>
+                <button class="price-pill active" data-price="all">Tất cả</button>
+                <button class="price-pill" data-price="under-50">Dưới 50.000đ</button>
+                <button class="price-pill" data-price="50-150">50.000đ - 150.000đ</button>
+                <button class="price-pill" data-price="over-150">Trên 150.000đ</button>
+            </div>
+            <div class="filter-right">
+                <select id="sortSelect" class="sort-select">
+                    <option value="default">Sắp xếp: Mặc định</option>
+                    <option value="price-asc">Giá: Thấp đến Cao</option>
+                    <option value="price-desc">Giá: Cao đến Thấp</option>
+                    <option value="brix-desc">Độ ngọt Brix cao nhất</option>
+                    <option value="rating-desc">Đánh giá cao nhất</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Lưới sản phẩm (Nạp động qua main.js) -->
+        <div id="productList" class="product-grid">
+            <!-- Được render tự động -->
+        </div>
+    </main>
+
+    <!-- 7. MODAL TRA CỨU ĐƠN HÀNG & THEO DÕI TIẾN TRÌNH -->
+    <div id="orderTrackingModal" class="modal-overlay" onclick="closeOrderTrackingOnBackdrop(event)" role="dialog" aria-modal="true" aria-label="Tra cứu đơn hàng">
+        <div class="modal-card" style="max-width: 650px; padding: 24px;">
+            <button class="modal-close-btn" onclick="closeOrderTrackingModal()" aria-label="Đóng">&times;</button>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+                <div style="font-size: 28px;">📦</div>
+                <div>
+                    <h2 style="font-size: 18px; font-weight: 800; color: var(--text-heading); margin: 0;">Tra Cứu & Lịch Sử Đơn Hàng</h2>
+                    <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Kiểm tra tiến độ giao hoa quả hỏa tốc hoặc in lại hóa đơn mua hàng</p>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                <input type="text" id="trackQueryInput" placeholder="Nhập mã đơn (ví dụ: DH1001) hoặc số điện thoại..." class="search-input" style="flex: 1; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; font-size: 13px;" oninput="searchTrackOrders()">
+                <button type="button" class="btn-add-cart-primary" onclick="searchTrackOrders()" style="padding: 0 16px; font-size: 13px;">Tìm kiếm</button>
+            </div>
+
+            <div id="trackResultsBox" style="max-height: 60vh; overflow-y: auto; display: flex; flex-direction: column; gap: 14px;">
+                <!-- Nạp động qua main.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. QUICK VIEW MODAL (Xem chi tiết hoa quả) -->
+    <div id="quickViewModal" class="modal-overlay" onclick="closeQuickViewOnBackdrop(event)" role="dialog" aria-modal="true" aria-label="Xem chi tiết hoa quả">
+        <div class="modal-card">
+            <button class="modal-close-btn" onclick="closeQuickView()" aria-label="Đóng">&times;</button>
+            <div class="modal-grid">
+                <div>
+                    <img id="modalImg" src="" alt="" class="modal-thumb">
+                </div>
+                <div class="modal-info">
+                    <div id="modalBadge" class="card-badge" style="position: static; display: inline-block; margin-bottom: 8px;"></div>
+                    <h2 id="modalTitle">Tên hoa quả</h2>
+                    <div class="product-rating" style="margin-bottom: 10px;">
+                        <span class="stars">★★★★★</span>
+                        <span id="modalRatingText">4.9 (42 đánh giá)</span>
+                    </div>
+
+                    <div style="font-size: 22px; font-weight: 800; color: var(--accent); margin-bottom: 8px;">
+                        <span id="modalPrice">0 đ</span>
+                        <span id="modalUnit" style="font-size: 13px; color: var(--text-muted); font-weight: normal;">/ kg</span>
+                    </div>
+
+                    <p id="modalDesc" style="font-size: 13px; color: var(--text-body); line-height: 1.6; margin-bottom: 12px;"></p>
+
+                    <div class="modal-meta-specs">
+                        <div><strong>Xuất xứ:</strong> <span id="modalOrigin"></span> (<span id="modalStandard"></span>)</div>
+                        <div><strong>Hạn sử dụng:</strong> <span id="modalExpiry"></span></div>
+                        <div><strong>Cách bảo quản:</strong> <span id="modalStorage"></span></div>
+                    </div>
+
+                    <!-- Thang đo độ ngọt Brix -->
+                    <div class="brix-bar-wrapper">
+                        <div class="brix-bar-label">
+                            <span>Độ ngọt tự nhiên (Brix):</span>
+                            <span id="modalBrixVal" style="color: var(--accent);">14.5°</span>
+                        </div>
+                        <div class="brix-bar">
+                            <div id="modalBrixFill" class="brix-fill" style="width: 70%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Chọn trọng lượng mua lẻ -->
+                    <div class="weight-picker-title">Chọn trọng lượng / số lượng đặt:</div>
+                    <div class="weight-chips" id="weightChips">
+                        <!-- Nạp động qua JS -->
+                    </div>
+
+                    <!-- Ô gõ số lượng tùy chỉnh kèm stepper -->
+                    <div class="modal-stepper-row" style="display: flex; align-items: center; justify-content: space-between; background: #f8fafc; border: 1px solid var(--border); padding: 8px 12px; border-radius: var(--radius-sm); margin-bottom: 12px;">
+                        <span style="font-size: 13px; font-weight: 600; color: var(--text-heading);">Số lượng tùy chỉnh:</span>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <div class="drawer-stepper" style="width: 110px;">
+                                <button type="button" id="modalStepDownBtn" class="drawer-step-btn" onclick="stepModalWeight(-0.5)" aria-label="Giảm số lượng">-</button>
+                                <input type="number" id="modalCustomWeightInput" class="drawer-step-input" value="1.0" min="0.5" step="0.5" onchange="changeModalWeight(this.value)" style="width: 50px; text-align: center;">
+                                <button type="button" id="modalStepUpBtn" class="drawer-step-btn" onclick="stepModalWeight(0.5)" aria-label="Tăng số lượng">+</button>
+                            </div>
+                            <span id="modalCustomWeightUnit" style="font-size: 13px; color: var(--text-muted); font-weight: 600;">kg</span>
+                        </div>
+                    </div>
+
+                    <!-- Tạm tính tiền theo trọng lượng -->
+                    <div class="modal-total-calc">
+                        <span style="font-size: 13px; color: var(--text-muted);">Tạm tính:</span>
+                        <span id="modalCalcTotal" style="font-size: 18px; font-weight: 800; color: var(--accent);">0 đ</span>
+                    </div>
+
+                    <button id="modalAddToCartBtn" class="btn-add-cart-primary" style="width: 100%; padding: 12px; font-size: 14px;">
+                        Thêm vào giỏ hàng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. MINI CART DRAWER (Giỏ hàng trượt thông minh từ phải) -->
+    <div id="drawerBackdrop" class="drawer-backdrop" onclick="closeCartDrawer()"></div>
+    <div id="cartDrawer" class="cart-drawer">
+        <div class="drawer-header">
+            <h3>Giỏ Hàng Của Bạn</h3>
+            <button class="drawer-close" onclick="closeCartDrawer()">&times;</button>
+        </div>
+
+        <!-- Thanh đo Freeship -->
+        <div class="freeship-meter">
+            <div id="freeshipText">Mua thêm <strong>0 đ</strong> để được Miễn Phí Vận Chuyển!</div>
+            <div class="freeship-progress">
+                <div id="freeshipFill" class="freeship-fill" style="width: 0%;"></div>
+            </div>
+        </div>
+
+        <!-- Danh sách món trong giỏ -->
+        <div id="drawerItemsList" class="drawer-items">
+            <!-- Nạp động qua JS -->
+        </div>
+
+        <div class="drawer-footer">
+            <div class="drawer-subtotal-row">
+                <span style="color: var(--text-muted);">Tổng tiền tạm tính:</span>
+                <strong id="drawerSubtotal" style="color: var(--accent); font-size: 18px;">0 đ</strong>
+            </div>
+            <div class="drawer-cta-col">
+                <a href="gio-hang.html" class="btn-add-cart-primary" style="text-align: center; text-decoration: none; padding: 12px; font-size: 14px;">
+                    Tiến hành đặt hàng ngay
+                </a>
+                <button onclick="closeCartDrawer()" class="btn-quickview" style="width: 100%; padding: 10px;">
+                    Tiếp tục chọn hoa quả
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. FOOTER CHUYÊN NGHIỆP -->
+    <footer id="aboutSection">
+        <div class="footer-top">
+            <div class="footer-col">
+                <h4>Cửa Hàng Hoa Quả Tươi</h4>
+                <p>Hệ thống cung cấp trái cây đặc sản và hoa quả nhập khẩu chính ngạch uy tín. Cam kết 100% tươi sạch, an toàn chuẩn VietGAP, GlobalGAP & Organic.</p>
+                <p>📍 <strong>Cơ sở 1 (Hà Nội):</strong> Số 3 Phố Cầu Giấy, P. Láng Thượng, Q. Đống Đa, Hà Nội (Trường ĐH Giao Thông Vận Tải - UTC)</p>
+                <p>📍 <strong>Cơ sở 2 (TP.HCM):</strong> Số 450 Lê Văn Việt, P. Tăng Nhơn Phú A, TP. Thủ Đức, TP.HCM (UTC2)</p>
+                <p>📞 <strong>Hỗ trợ trực tuyến:</strong> 1900 xxxx (07:30 - 21:30)</p>
+            </div>
+            <div class="footer-col">
+                <h4>Chính sách bán hàng</h4>
+                <ul>
+                    <li><a href="javascript:void(0)" onclick="alert('Chính sách: Đổi trả 1-1 miễn phí trong 24h nếu quả bị dập, hỏng hoặc không đạt chất lượng cam kết.')">Chính sách đổi trả trong 24h</a></li>
+                    <li><a href="javascript:void(0)" onclick="alert('Giao hàng hỏa tốc trong 1-2h nội thành. Đóng kèm đá gel giữ lạnh.')">Chính sách giao hàng 2h</a></li>
+                    <li><a href="javascript:void(0)" onclick="alert('Miễn phí đóng hộp quà, thắt nơ ruy băng lụa và viết thiệp chúc mừng theo yêu cầu.')">Dịch vụ đóng giỏ quà biếu</a></li>
+                    <li><a href="quan-ly.html">Kiểm tra lô hàng & Hạn dùng (FEFO)</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Chứng nhận chất lượng</h4>
+                <ul>
+                    <li>Chứng nhận Nông nghiệp sạch VietGAP</li>
+                    <li>Chứng nhận Tiêu chuẩn quốc tế GlobalGAP</li>
+                    <li>Chứng nhận Organic Nho & Táo nhập khẩu</li>
+                    <li>Kiểm định an toàn thực phẩm định kỳ</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Đồ án sinh viên</h4>
+                <p><strong>Môn:</strong> Thiết kế Web</p>
+                <p><strong>Đề tài:</strong> Web quản lý bán hàng hoa quả</p>
+                <div style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" onclick="exportDatabaseJson()" style="background: none; border: 1px solid #4ade80; color: #4ade80; padding: 4px 10px; border-radius: 4px; font-size: 11px; cursor: pointer;">
+                        📥 Xuất dữ liệu JSON
+                    </button>
+                    <button type="button" onclick="resetSeedData()" style="background: none; border: 1px solid #94a3b8; color: #cbd5e1; padding: 4px 10px; border-radius: 4px; font-size: 11px; cursor: pointer;">
+                        🔄 Khôi phục mẫu
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>Dự án Bài tập lớn Môn Thiết kế Web - Mã nguồn mở phục vụ học tập & nghiên cứu</p>
+        </div>
+    </footer>
+
+    <!-- 10. JAVASCRIPT -->
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giỏ Hàng & Thanh Toán - Cửa Hàng Hoa Quả Tươi Nông Sản Xanh</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- 1. TOPBAR TIỆN ÍCH -->
+    <div class="topbar">
+        <div class="topbar-container">
+            <div class="topbar-msg">
+                <span>🚚 Đơn hàng từ <strong>250.000đ</strong> được Miễn Phí Vận Chuyển nội thành</span>
+                <span>🛡️ Đổi trả 1-1 trong 24h nếu quả bị dập hỏng</span>
+            </div>
+            <div class="topbar-links">
+                <a href="javascript:void(0)" onclick="openOrderTrackingModal()">🔍 Tra cứu đơn hàng</a>
+                <a href="index.html">&larr; Tiếp tục mua hàng</a>
+                <a href="quan-ly.html">Kênh Quản trị Kho</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. HEADER -->
+    <header>
+        <div class="header-main">
+            <a href="index.html" class="brand">
+                <div class="brand-icon">🌿</div>
+                <div class="brand-info">
+                    <span class="brand-name">Cửa Hàng Hoa Quả</span>
+                    <span class="brand-tagline">Giỏ hàng & Đặt hàng trực tuyến</span>
+                </div>
+            </a>
+
+            <div class="header-actions">
+                <button type="button" class="btn-quickview" onclick="openOrderTrackingModal()" style="display: flex; align-items: center; gap: 6px; padding: 7px 12px; font-size: 13px;">
+                    <span>🔍 Tra cứu đơn</span>
+                </button>
+                <a href="gio-hang.html" class="cart-header-btn" style="text-decoration: none; padding: 7px 14px; font-size: 13px; display: flex; align-items: center; gap: 8px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                    <span>Giỏ hàng</span>
+                    <span id="cartBadge" class="cart-badge-pill">0</span>
+                </a>
+                <a href="index.html" class="btn-quickview" style="text-decoration: none; display: flex; align-items: center; gap: 6px; padding: 7px 12px; font-size: 13px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    <span>Thêm hoa quả</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 3. NỘI DUNG GIỎ HÀNG CHÍNH -->
+    <main class="main-container" style="margin-top: 24px;">
+        <!-- Breadcrumb chỉ dẫn -->
+        <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+            <a href="index.html" style="color: var(--text-muted); text-decoration: none;">Trang chủ</a> &rsaquo; 
+            <strong style="color: var(--text-heading);">Giỏ hàng & Thanh toán</strong>
+        </div>
+
+        <!-- Trạng thái giỏ hàng trống -->
+        <div id="emptyCartBox" style="display: none; text-align: center; padding: 70px 20px; background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius-lg);">
+            <div style="font-size: 48px; margin-bottom: 12px;">🛒</div>
+            <h2 style="font-size: 20px; font-weight: 800; color: var(--text-heading); margin-bottom: 8px;">Giỏ hàng của bạn đang trống</h2>
+            <p style="color: var(--text-muted); font-size: 14px; max-width: 440px; margin: 0 auto 24px auto;">
+                Hãy chọn những loại hoa quả tươi ngon nhất mùa vụ 2026 từ vườn Tiền Giang, Đà Lạt hoặc hoa quả nhập khẩu để thưởng thức cùng gia đình nhé!
+            </p>
+            <a href="index.html" class="btn-add-cart-primary" style="display: inline-block; padding: 12px 28px; font-size: 14px; text-decoration: none;">
+                Khám phá hoa quả tươi ngay
+            </a>
+        </div>
+
+        <!-- Khung 2 cột khi có sản phẩm -->
+        <div id="cartPageLayout" class="cart-page-layout">
+            <!-- CỘT TRÁI: DANH SÁCH MẶT HÀNG & MÃ VOUCHER -->
+            <div>
+                <div style="background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border);">
+                        <h2 style="font-size: 16px; font-weight: 700; color: var(--text-heading);">Danh sách hoa quả đã chọn</h2>
+                        <button onclick="clearAllCart()" style="background: none; border: none; color: #ef4444; font-size: 12px; cursor: pointer; text-decoration: underline;">
+                            Xóa toàn bộ giỏ
+                        </button>
+                    </div>
+
+                    <!-- Thanh thông báo Freeship -->
+                    <div class="freeship-meter" style="border-radius: var(--radius); border: 1px solid var(--primary-border); margin-bottom: 16px;">
+                        <div id="cartPageFreeshipText">Đang tính toán ưu đãi vận chuyển...</div>
+                        <div class="freeship-progress">
+                            <div id="cartPageFreeshipFill" class="freeship-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Bảng mặt hàng -->
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                            <thead>
+                                <tr style="background: #f8fafc; text-align: left; border-bottom: 1px solid var(--border);">
+                                    <th style="padding: 10px 12px; font-weight: 600; color: var(--text-muted);">Sản phẩm</th>
+                                    <th style="padding: 10px 12px; font-weight: 600; color: var(--text-muted);">Đơn giá</th>
+                                    <th style="padding: 10px 12px; font-weight: 600; color: var(--text-muted); width: 130px;">Số lượng / Cân nặng</th>
+                                    <th style="padding: 10px 12px; font-weight: 600; color: var(--text-muted);">Thành tiền</th>
+                                    <th style="padding: 10px 8px; width: 40px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="cartTableBody">
+                                <!-- Nạp động qua cart.js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- KHỐI MÃ GIẢM GIÁ (Voucher Box) -->
+                <div style="background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px;">
+                    <h3 style="font-size: 14px; font-weight: 700; color: var(--text-heading); margin-bottom: 4px;">Ưu đãi & Mã giảm giá</h3>
+                    <p style="font-size: 12px; color: var(--text-muted);">Nhập mã voucher hoặc chạm vào các gợi ý bên dưới để áp dụng:</p>
+                    
+                    <div class="voucher-input-group">
+                        <input type="text" id="voucherInput" class="voucher-field" placeholder="Nhập mã: TRAICAY10 hoặc FREESHIP">
+                        <button type="button" class="btn-apply-voucher" onclick="applyVoucherAction()">Áp dụng mã</button>
+                    </div>
+
+                    <div style="display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;">
+                        <span class="code-pill" onclick="quickApplyVoucher('TRAICAY10')">TRAICAY10 (Giảm 10% đơn từ 200k)</span>
+                        <span class="code-pill" onclick="quickApplyVoucher('FREESHIP')">FREESHIP (Miễn phí ship đơn từ 100k)</span>
+                    </div>
+
+                    <div id="appliedVoucherNotice" style="display: none; margin-top: 12px; padding: 8px 12px; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: var(--radius-sm); font-size: 13px; color: #065f46; justify-content: space-between; align-items: center;">
+                        <span id="voucherNoticeText"></span>
+                        <button onclick="removeVoucherAction()" style="background: none; border: none; color: #dc2626; font-size: 12px; cursor: pointer; text-decoration: underline;">Hủy mã</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CỘT PHẢI: FORM THÔNG TIN NHẬN HÀNG & TỔNG TIỀN -->
+            <div style="background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px; position: sticky; top: 80px;">
+                <h2 style="font-size: 16px; font-weight: 700; color: var(--text-heading); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border);">
+                    Thông tin giao hàng
+                </h2>
+
+                <form id="checkoutForm">
+                    <div style="margin-bottom: 14px;">
+                        <label style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px;">Họ và tên người nhận (*)</label>
+                        <input type="text" id="custName" class="form-control" placeholder="Ví dụ: Nguyễn Văn A" required>
+                    </div>
+
+                    <div style="margin-bottom: 14px;">
+                        <label style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px;">Số điện thoại di động (*)</label>
+                        <input type="tel" id="custPhone" class="form-control" placeholder="Ví dụ: 09xx xxx xxx" required>
+                    </div>
+
+                    <div style="margin-bottom: 14px;">
+                        <label style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px;">Địa chỉ giao hàng chi tiết (*)</label>
+                        <input type="text" id="custAddress" class="form-control" placeholder="Số nhà, tên đường, phường/xã, quận/huyện..." required>
+                    </div>
+
+                    <div style="margin-bottom: 14px;">
+                        <label style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px;">Khung giờ giao hàng</label>
+                        <select id="deliverySlot" class="form-control">
+                            <option value="Giao ngay (1 - 2 giờ)">Giao hỏa tốc 1 - 2 giờ (Đóng đá gel giữ lạnh)</option>
+                            <option value="Buổi chiều nay (14h - 17h)">Buổi chiều nay (14:00 - 17:00)</option>
+                            <option value="Buổi tối (18h - 20h)">Buổi tối (18:00 - 20:00)</option>
+                            <option value="Sáng mai (08h - 11h)">Sáng mai (08:00 - 11:00)</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px;">Phương thức thanh toán</label>
+                        <label style="display: flex; align-items: center; gap: 8px; padding: 8px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px;">
+                            <input type="radio" name="payMethod" value="COD" checked>
+                            <span>💵 Thanh toán tiền mặt khi nhận hàng (COD)</span>
+                        </label>
+                    </div>
+
+                    <!-- Tổng kết hóa đơn -->
+                    <div style="border-top: 1px dashed var(--border); padding-top: 14px; margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+                            <span style="color: var(--text-muted);">Tiền hàng (Tạm tính):</span>
+                            <span id="summarySubtotal" style="font-weight: 600;">0 đ</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+                            <span style="color: var(--text-muted);">Giảm giá voucher:</span>
+                            <span id="summaryDiscount" style="color: #15803d; font-weight: 600;">0 đ</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px;">
+                            <span style="color: var(--text-muted);">Phí giao hàng:</span>
+                            <span id="summaryShipping" style="font-weight: 600;">Miễn phí</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 17px; font-weight: 800; color: var(--accent); border-top: 1px dashed var(--border); padding-top: 10px;">
+                            <span>Tổng thanh toán:</span>
+                            <span id="summaryGrandTotal">0 đ</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-add-cart-primary" style="width: 100%; padding: 13px; font-size: 15px; font-weight: 800;">
+                        Xác nhận đặt đơn hoa quả
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- 4. MODAL ĐẶT HÀNG THÀNH CÔNG (Order Success Modal) -->
+    <div id="orderSuccessModal" class="modal-overlay" style="display: none;" onclick="closeOrderSuccessOnBackdrop(event)" role="dialog" aria-modal="true" aria-label="Đặt hàng thành công">
+        <div class="modal-card" style="max-width: 520px; text-align: center; padding: 32px 24px; position: relative;">
+            <button class="modal-close-btn" onclick="closeOrderSuccessModal()" aria-label="Đóng">&times;</button>
+            <div style="width: 64px; height: 64px; background: #dcfce7; color: #15803d; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 16px auto;">
+                ✓
+            </div>
+            <h2 style="font-size: 22px; font-weight: 800; color: var(--text-heading); margin-bottom: 8px;">Đặt Hàng Thành Công!</h2>
+            <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px;">
+                Cảm ơn bạn đã tin chọn hoa quả sạch tại Nông Sản Xanh. Đơn hàng của bạn đã được tiếp nhận và chuẩn bị đóng gói.
+            </p>
+
+            <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; text-align: left; font-size: 13px; margin-bottom: 20px;">
+                <div style="margin-bottom: 6px;"><strong>Mã đơn hàng:</strong> <span id="successOrderId" style="color: var(--accent); font-weight: 700;"></span></div>
+                <div style="margin-bottom: 6px;"><strong>Người nhận:</strong> <span id="successCustName"></span> (<span id="successPhone"></span>)</div>
+                <div style="margin-bottom: 6px;"><strong>Địa chỉ:</strong> <span id="successAddress"></span></div>
+                <div style="margin-bottom: 6px;"><strong>Khung giờ giao:</strong> <span id="successSlot"></span></div>
+                <div style="margin-bottom: 6px;"><strong>Hình thức:</strong> <span id="successPayMethod"></span></div>
+                <div style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border); font-size: 15px; font-weight: 800; color: var(--accent); display: flex; justify-content: space-between;">
+                    <span>Tổng số tiền:</span>
+                    <span id="successTotal"></span>
+                </div>
+            </div>
+
+
+            <!-- Nút in hóa đơn trực tiếp -->
+            <div style="margin-bottom: 12px;">
+                <button type="button" id="btnSuccessPrint" class="btn-add-cart-primary" style="width: 100%; padding: 12px; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; background: #0f172a; border-color: #0f172a; cursor: pointer;">
+                    <span>🖨️ In hóa đơn / Lưu phiếu giao hàng</span>
+                </button>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <a href="index.html" class="btn-add-cart-primary" style="flex: 1; text-decoration: none; padding: 11px; font-size: 13px;">
+                    Tiếp tục mua hàng
+                </a>
+                <a href="quan-ly.html" class="btn-quickview" style="flex: 1; text-decoration: none; padding: 11px; font-size: 13px;">
+                    Xem trong Quản Trị Kho
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. MODAL TRA CỨU ĐƠN HÀNG & THEO DÕI TIẾN TRÌNH -->
+    <div id="orderTrackingModal" class="modal-overlay" onclick="closeOrderTrackingOnBackdrop(event)" role="dialog" aria-modal="true" aria-label="Tra cứu đơn hàng">
+        <div class="modal-card" style="max-width: 650px; padding: 24px;">
+            <button class="modal-close-btn" onclick="closeOrderTrackingModal()" aria-label="Đóng">&times;</button>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+                <div style="font-size: 28px;">📦</div>
+                <div>
+                    <h2 style="font-size: 18px; font-weight: 800; color: var(--text-heading); margin: 0;">Tra Cứu & Lịch Sử Đơn Hàng</h2>
+                    <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Kiểm tra tiến độ giao hoa quả hỏa tốc hoặc in lại hóa đơn mua hàng</p>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                <input type="text" id="trackQueryInput" placeholder="Nhập mã đơn (ví dụ: DH1001) hoặc số điện thoại..." class="search-input" style="flex: 1; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; font-size: 13px;" oninput="searchTrackOrders()">
+                <button type="button" class="btn-add-cart-primary" onclick="searchTrackOrders()" style="padding: 0 16px; font-size: 13px;">Tìm kiếm</button>
+            </div>
+
+            <div id="trackResultsBox" style="max-height: 60vh; overflow-y: auto; display: flex; flex-direction: column; gap: 14px;">
+                <!-- Nạp động qua JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. FOOTER -->
+    <footer>
+        <div class="footer-bottom">
+            <p>Dự án Bài tập lớn Môn Thiết kế Web - Hệ thống Đặt hàng & Bán lẻ Trực tuyến</p>
+        </div>
+    </footer>
+
+    <!-- 7. JAVASCRIPT -->
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/cart.js"></script>
+</body>
+</html>
