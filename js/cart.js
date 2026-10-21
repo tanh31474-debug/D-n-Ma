@@ -325,7 +325,8 @@ function handleCheckoutSubmit(e) {
     const address = document.getElementById("custAddress").value.trim();
     const slot = document.getElementById("deliverySlot").value;
 
-    const payMethod = "COD"; // cửa hàng chỉ nhận thanh toán tiền mặt khi nhận hàng
+    const payMethodEl = document.querySelector('input[name="payMethod"]:checked');
+    const payMethod = payMethodEl ? payMethodEl.value : "COD";
 
     if (!name || name.length < 2) {
         showToast("Vui lòng điền họ và tên người nhận hợp lệ!", "error");
@@ -451,6 +452,24 @@ function handleCheckoutSubmit(e) {
     document.getElementById("successSlot").textContent = newOrder.deliverySlot;
     document.getElementById("successPayMethod").textContent = newOrder.paymentMethod;
     document.getElementById("successTotal").textContent = formatCurrency(newOrder.total);
+
+    const qrSec = document.getElementById("vietQrSection");
+    if (!qrSec) {
+        // trang không có khung QR (ví dụ gio-hang.html cũ): bỏ qua, vẫn hiện thông báo thành công
+    } else if (payMethod === "Chuyển khoản QR") {
+        qrSec.style.display = "block";
+        const memo = `THANH TOAN ${newOrder.id}`; // chỉ mã đơn, không gửi SĐT khách ra dịch vụ bên ngoài
+        document.getElementById("vietQrMemo").textContent = memo;
+        const qrImg = document.getElementById("vietQrImage");
+        const fallbackText = document.getElementById("vietQrFallbackText");
+        if (fallbackText) fallbackText.style.display = "none";
+        if (qrImg) {
+            qrImg.style.display = "block";
+            qrImg.src = `https://img.vietqr.io/image/970422-9999999999-compact2.png?amount=${newOrder.total}&addInfo=${encodeURIComponent(memo)}&accountName=CUAHANG%20HOAQUA`;
+        }
+    } else {
+        qrSec.style.display = "none";
+    }
 
     const printBtn = document.getElementById("btnSuccessPrint");
     if (printBtn) {
