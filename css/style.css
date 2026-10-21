@@ -1610,6 +1610,15 @@ footer {
     display: none;
 }
 
+.vietqr-img {
+    max-width: 220px;
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    display: block;
+    margin: 0 auto;
+}
+
 @media print {
 
     body.printing-mode > *:not(#orderPrintArea):not(.order-print-area) {
